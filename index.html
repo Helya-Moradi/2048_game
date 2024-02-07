@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" href="index.css">
+    <title>2048 Game</title>
+</head>
+<body>
+    <div class="gameContainer">
+        <header>
+            <div class="title">
+                <h1>2048</h1>
+                <span>Join the numbers and get to the 2048 tile!</span>
+            </div>
+
+            <div class="details">
+                <span class="scoreWrapper">Score : <span class="score"></span></span>
+                <button class="newGame">New Game</button>
+            </div>
+        </header>
+
+        <div class="gameBoard">
+        </div>
+    </div>
+
+    <div class="gameOverContainer hide">
+        <span class="gameOver">Game Over</span>
+        <button class="newGame">Try again</button>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>
