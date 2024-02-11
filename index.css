@@ -111,10 +111,28 @@ header {
     justify-content: center;
     color: #ffffff;
     align-items: center;
+    border-radius: .4rem;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+}
+
+@keyframes blink {
+    0%{
+        transform: scale(1);
+    }
+    50%{
+        transform: scale(.7);
+    }
+    100%{
+        transform: scale(1);
+    }
+
+}
+
+.gameBoard .tileWrapper .tile.merged{
+    animation: blink .25s;
 }
 
 .gameBoard .tileWrapper .tile.tile-2{

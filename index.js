@@ -3,8 +3,6 @@ const scoreElem = document.querySelector('.score');
 
 let rows = 4, columns = 4, score = 0, wonGame = false, matrix = [];
 
-scoreElem.textContent = score;
-
 function generateBoard() {
     board.style.gridTemplateColumns = `repeat(${rows}, 1fr)`;
     board.style.gridTemplateRows = ` repeat(${columns}, 1fr)`;
@@ -38,8 +36,6 @@ function addRandomTile() {
 }
 
 function addTileToPage(row, column, value) {
-    console.log({row, column, value});
-
     let tile = document.createElement('div');
     tile.classList.add(
         'tile',
@@ -56,13 +52,24 @@ function addTileToPage(row, column, value) {
 
         if (i === row && j === column) {
             tileWrapper.appendChild(tile);
+            tile.classList.add('merged');
+            tile.addEventListener('animationend',()=>{
+                tile.classList.remove('merged');
+            })
         }
     })
 
 }
 
+function newGame(){
+    scoreElem.textContent = 0;
+
+}
 
 generateBoard()
 addRandomTile()
 addRandomTile()
+
+
+
 
