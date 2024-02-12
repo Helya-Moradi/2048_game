@@ -1,5 +1,8 @@
 const board = document.querySelector('.gameBoard');
 const scoreElem = document.querySelector('.score');
+const gameContainer = document.querySelector('.gameContainer');
+const gameOverContainer = document.querySelector('.gameOverContainer');
+const newGameButton = document.querySelector('.newGame');
 
 let rows = 4, columns = 4, score = 0, wonGame = false, matrix = [];
 
@@ -41,7 +44,7 @@ function addTileToPage(row, column, value) {
         'tile',
         `row${row + 1}`,
         `column${column + 1}`,
-        `tile-${value}`
+        `tile${value}`
     );
     tile.innerHTML = value;
 
@@ -53,23 +56,14 @@ function addTileToPage(row, column, value) {
         if (i === row && j === column) {
             tileWrapper.appendChild(tile);
             tile.classList.add('merged');
-            tile.addEventListener('animationend',()=>{
+            tile.addEventListener('animationend', () => {
                 tile.classList.remove('merged');
             })
         }
     })
-
-}
-
-function newGame(){
-    scoreElem.textContent = 0;
-
 }
 
 generateBoard()
-addRandomTile()
-addRandomTile()
-
 
 
 

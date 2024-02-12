@@ -135,49 +135,49 @@ header {
     animation: blink .25s;
 }
 
-.gameBoard .tileWrapper .tile.tile-2{
+.gameBoard .tileWrapper .tile.tile2{
     background-color: #eee4da;
     color: #727371;
 }
 
-.gameBoard .tileWrapper .tile.tile-4{
+.gameBoard .tileWrapper .tile.tile4{
     background-color: #eee1c9;
     color: #727371;
 }
 
-.gameBoard .tileWrapper .tile.tile-8{
+.gameBoard .tileWrapper .tile.tile8{
     background-color: #f3b27a;
 }
 
-.gameBoard .tileWrapper .tile.tile-16{
+.gameBoard .tileWrapper .tile.tile16{
     background-color: #f69664;
 }
 
-.gameBoard .tileWrapper .tile.tile-32{
+.gameBoard .tileWrapper .tile.tile32{
     background-color: #f77c5f;
 }
 
-.gameBoard .tileWrapper .tile.tile-64{
+.gameBoard .tileWrapper .tile.tile64{
     background-color: #f75f3b;
 }
 
-.gameBoard .tileWrapper .tile.tile-128{
+.gameBoard .tileWrapper .tile.tile128{
     background-color: #edd073;
 }
 
-.gameBoard .tileWrapper .tile.tile-256{
+.gameBoard .tileWrapper .tile.tile256{
     background-color: #edcc63;
 }
 
-.gameBoard .tileWrapper .tile.tile-512{
+.gameBoard .tileWrapper .tile.tile512{
     background-color: #edc651;
 }
 
-.gameBoard .tileWrapper .tile.tile-1024{
+.gameBoard .tileWrapper .tile.tile1024{
     background-color: #eec744;
 }
 
-.gameBoard .tileWrapper .tile.tile-2048{
+.gameBoard .tileWrapper .tile.tile2048{
     background-color: #ecc230;
 }
 
