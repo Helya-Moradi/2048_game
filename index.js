@@ -141,22 +141,25 @@ function moveHandler(e) {
 
 function moveTo(direction, value, {row, col}) {
 
-    if (direction === 'up') {
+    console.log(row, col)
+    let isMoveAllow;
 
+    if (direction === 'up') {
+        isMoveAllow = false;
+
+        const previousItemsArray = [];
+
+        for (let i = row - 1; i >= 0; i--) {
+            previousItemsArray.push(matrix[i][col])
+        }
+
+        isMoveAllow = previousItemsArray.some(item => item === 0);
     }
 
     return {
         pos: {row: 0, col: 0},
-        isMoveAllow: true
+        isMoveAllow
     }
-}
-
-function rotateMatrix(times = 1) {
-    let newMat = []
-
-
-
-    return newMat
 }
 
 
@@ -171,21 +174,23 @@ function upMoveHandler() {
             for (let j = 0; j < matrix[i].length; j++) {
 
                 if (matrix[i][j] !== 0) {
-                    const columnArr = [];
-                    for (let k = 0; k < matrix.length; k++) {
-                        columnArr.push({row: k, column: j, value: matrix[k][j]});
-                    }
-
-                    for (let m = 0; m < columnArr.length; m++) {
-                        if (m > 0 && columnArr[m].value > columnArr[m - 1].value) {
-                            const buffer = columnArr[m];
-                            // console.log(buffer)
-                            matrix[columnArr[m - 1].row][columnArr[m - 1].column] = buffer.value;
-                            matrix[buffer.row][buffer.column] = 0;
-                            generateBoard()
-                            console.log(matrix)
-                        }
-                    }
+                    const move = moveTo('up', matrix[i][j], {row: i, col: j});
+                    // console.log(move.isMoveAllow)
+                    // const columnArr = [];
+                    // for (let k = 0; k < matrix.length; k++) {
+                    //     columnArr.push({row: k, column: j, value: matrix[k][j]});
+                    // }
+                    //
+                    // for (let m = 0; m < columnArr.length; m++) {
+                    //     if (m > 0 && columnArr[m].value > columnArr[m - 1].value) {
+                    //         const buffer = columnArr[m];
+                    //         // console.log(buffer)
+                    //         matrix[columnArr[m - 1].row][columnArr[m - 1].column] = buffer.value;
+                    //         matrix[buffer.row][buffer.column] = 0;
+                    //         generateBoard()
+                    //         console.log(matrix)
+                    //     }
+                    // }
                 }
             }
         }
