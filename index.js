@@ -6,9 +6,9 @@ const newGameButtons = document.querySelectorAll('.newGame');
 
 let matrix = [
     [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0]
+    [0, 0, 2, 0],
+    [0, 0, 2, 0],
+    [0, 0, 2, 0]
 ];
 
 let score = 0;
@@ -54,7 +54,6 @@ function animate(options) {
         if (timeFraction < 1) {
             requestAnimationFrame(animate);
         }
-
     });
 }
 
@@ -66,6 +65,7 @@ function addRandomTile() {
 
     if (matrix[randomI][randomJ] === 0) {
         matrix[randomI][randomJ] = createRandom(0, 10) < 9 ? 2 : 4;
+        gameOverCheck()
         generateBoard();
     } else {
         addRandomTile();
@@ -91,8 +91,8 @@ function newGame() {
 
     generateScoreElem();
     generateBoard();
-    addRandomTile();
-    addRandomTile();
+    // addRandomTile();
+    // addRandomTile();
 }
 
 newGameButtons.forEach(newButton => {
@@ -107,13 +107,14 @@ newGameButtons.forEach(newButton => {
     })
 })
 
-const isContinue = matrix.some(i => i.some(j => j === 0));
-
 function gameOverCheck() {
+    const isContinue = matrix.some(i => i.some(j => j === 0));
+
     if (isContinue) {
         gameContainer.classList.remove('hide');
         gameOverContainer.classList.add('hide');
     } else {
+        console.log('over')
         gameContainer.classList.add('hide');
         gameOverContainer.classList.remove('hide');
     }
@@ -140,71 +141,96 @@ function moveHandler(e) {
 }
 
 function moveTo(direction, value, {row, col}) {
+    let dests = [{row, col, value}];
 
-    console.log(row, col)
-    let isMoveAllow;
 
     if (direction === 'up') {
-        isMoveAllow = false;
+        // const previousItemsArray = [];
+        //
+        // for (let i = 0; i < row; i++) {
+        //     previousItemsArray.push({row: i, col: col, value: matrix[i][col]});
+        // }
 
+        for (let r = row - 1; r >= 0; r--) {
+            if (matrix[r][col] === 0) {
+                dests.push({row: r, col, value})
+            } else if (matrix[r][col] === value) {
+                dests.push({row: r, col, value: value *2})
+                break;
+            }
+        }
+    }
+    if (direction === 'down') {
         const previousItemsArray = [];
 
-        for (let i = row - 1; i >= 0; i--) {
-            previousItemsArray.push(matrix[i][col])
+        for (let i = row + 1; i < matrix[row].length; i++) {
+            previousItemsArray.push({row: i, col: col, value: matrix[i][col]});
         }
 
-        isMoveAllow = previousItemsArray.some(item => item === 0);
+        for (let i = 0; i < previousItemsArray.length; i++) {
+            const item = previousItemsArray[i];
+            if (item.value === 0) {
+                isMoveAllow = true;
+                dest = {row: item.row, col: item.col, value: value}
+            }
+        }
     }
 
-    return {
-        pos: {row: 0, col: 0},
-        isMoveAllow
-    }
+    return dests
+}
+
+function moveWithAnimation(dests) {
+
 }
 
 
 function upMoveHandler() {
-    const anotherRows = matrix.filter((i, index) => index !== 0);
+    let hasMove = false;
 
-    const isMoveAllow = anotherRows.some(row => row.some(cell => cell !== 0));
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[i].length; j++) {
+            if (matrix[i][j] !== 0) {
+                const dests = moveTo('up', matrix[i][j], {row: i, col: j});
+                console.log(i,j,dests)
 
-    if (isMoveAllow) {
+                if (dests.length > 1) {
+                    // matrix[move.dest.row][move.dest.col] = move.dest.value;
+                    // matrix[i][j] = 0;
 
-        for (let i = 0; i < matrix.length; i++) {
-            for (let j = 0; j < matrix[i].length; j++) {
+                    // TODO: move with animation and update matrix
 
-                if (matrix[i][j] !== 0) {
-                    const move = moveTo('up', matrix[i][j], {row: i, col: j});
-                    // console.log(move.isMoveAllow)
-                    // const columnArr = [];
-                    // for (let k = 0; k < matrix.length; k++) {
-                    //     columnArr.push({row: k, column: j, value: matrix[k][j]});
-                    // }
-                    //
-                    // for (let m = 0; m < columnArr.length; m++) {
-                    //     if (m > 0 && columnArr[m].value > columnArr[m - 1].value) {
-                    //         const buffer = columnArr[m];
-                    //         // console.log(buffer)
-                    //         matrix[columnArr[m - 1].row][columnArr[m - 1].column] = buffer.value;
-                    //         matrix[buffer.row][buffer.column] = 0;
-                    //         generateBoard()
-                    //         console.log(matrix)
-                    //     }
-                    // }
                 }
             }
         }
+    }
 
-        // const t = matrix[0].map((val, i) => matrix.map((row, j) => {
-        //     return {val: row[i], row: i, column: j}
-        // }))
-        //
-        // console.log(t)
-
+    if (hasMove) {
+        // addRandomTile();
+        generateBoard();
     }
 }
 
 function downMoveHandler() {
+    let hasMove = false;
+
+    for (let i = matrix.length - 1; i >= 0; i--) {
+        for (let j = matrix[i].length - 1; j >= 0; j--) {
+            if (matrix[i][j] !== 0) {
+                const move = moveTo('down', matrix[i][j], {row: i, col: j});
+                hasMove = hasMove || move.isMoveAllow;
+
+                if (move.isMoveAllow) {
+                    matrix[move.dest.row][move.dest.col] = move.dest.value;
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    if (hasMove) {
+        // addRandomTile();
+        generateBoard();
+    }
 }
 
 function leftMoveHandler() {
