@@ -6,7 +6,7 @@ const newGameButtons = document.querySelectorAll('.newGame');
 
 let matrix = [
     [0, 0, 0, 0],
-    [0, 0, 0, 0],
+    [0, 2, 0, 0],
     [0, 4, 0, 0],
     [0, 0, 0, 0]
 ];
@@ -81,7 +81,8 @@ function resetMatrix() {
     ];
 }
 
-function generateScoreElem() {
+function generateScoreElem(val) {
+    score += val;
     scoreElem.innerHTML = score;
 }
 
@@ -89,7 +90,7 @@ function newGame() {
     gameContainer.classList.remove('hide');
     gameOverContainer.classList.add('hide');
 
-    generateScoreElem();
+    generateScoreElem(0);
     generateBoard();
     // addRandomTile();
     // addRandomTile();
@@ -139,34 +140,19 @@ function moveHandler(e) {
     }
 }
 
-function moveTo(direction, value, {row, col}) {
+function findDests(value, {row, col}) {
     let dests = [{row, col, value}];
 
-    if (direction === 'up') {
-        for (let r = row - 1; r >= 0; r--) {
-            if (matrix[r][col] === 0) {
-                dests.push({row: r, col, value})
-            } else if (matrix[r][col] === value) {
-                dests.push({row: r, col, value: value * 2})
-            } else {
-                break;
-            }
+    for (let r = row - 1; r >= 0; r--) {
+        if (matrix[r][col] === 0) {
+            dests.push({row: r, col, value});
+        } else if (matrix[r][col] === value) {
+            dests.push({row: r, col, value: value * 2});
+            generateScoreElem(value * 2);
+        } else {
+            break;
         }
-    }
-    if (direction === 'down') {
-        // const previousItemsArray = [];
-        //
-        // for (let i = row + 1; i < matrix[row].length; i++) {
-        //     previousItemsArray.push({row: i, col: col, value: matrix[i][col]});
-        // }
-        //
-        // for (let i = 0; i < previousItemsArray.length; i++) {
-        //     const item = previousItemsArray[i];
-        //     if (item.value === 0) {
-        //         isMoveAllow = true;
-        //         dest = {row: item.row, col: item.col, value: value}
-        //     }
-        // }
+
     }
 
     return dests;
@@ -183,65 +169,70 @@ function moveWithAnimation(dests) {
     }
 }
 
-
-function upMoveHandler() {
+function moveToUp() {
     let hasMove = false;
 
     for (let i = 0; i < matrix.length; i++) {
         for (let j = 0; j < matrix[i].length; j++) {
             if (matrix[i][j] !== 0) {
-                const dests = moveTo('up', matrix[i][j], {row: i, col: j});
+                const dests = findDests(matrix[i][j], {row: i, col: j});
 
                 if (dests.length > 1) {
                     hasMove = true;
-                    // TODO: move with animation and update matrix
                     moveWithAnimation(dests);
                 }
             }
         }
     }
 
-    if (hasMove) {
-        // addRandomTile();
-        generateBoard();
+    return hasMove;
+}
+
+const rightRotate = () => {
+    matrix = matrix[0].map((val, index) => matrix.map(row => row[index]).reverse());
+}
+const leftRotate = () => {
+    matrix = matrix[0].map((val, index) => matrix.map(row => row[row.length - 1 - index]));
+}
+
+
+function upMoveHandler() {
+    const movable = moveToUp()
+    if (movable) {
+        addRandomTile();
     }
 }
 
 function downMoveHandler() {
-    let hasMove = false;
 
-    // for (let i = matrix.length - 1; i >= 0; i--) {
-    //     for (let j = matrix[i].length - 1; j >= 0; j--) {
-    //         if (matrix[i][j] !== 0) {
-    //             const move = moveTo('down', matrix[i][j], {row: i, col: j});
-    //             hasMove = hasMove || move.isMoveAllow;
-    //
-    //             if (move.isMoveAllow) {
-    //                 matrix[move.dest.row][move.dest.col] = move.dest.value;
-    //                 matrix[i][j] = 0;
-    //             }
-    //         }
-    //     }
-    // }
-    //
-    // if (hasMove) {
-    //     // addRandomTile();
-    //     generateBoard();
-    // }
+    leftRotate();
+    leftRotate();
+    const movable = moveToUp()
+    rightRotate();
+    rightRotate();
+    if (movable) {
+        addRandomTile();
+    }
 }
 
 function leftMoveHandler() {
+    rightRotate();
+    const movable = moveToUp()
+    leftRotate();
+    if (movable) {
+        addRandomTile();
+    }
 }
 
 function rightMoveHandler() {
+    leftRotate();
+    const movable = moveToUp()
+    rightRotate();
+    if (movable) {
+        addRandomTile();
+    }
 }
 
 window.addEventListener('keydown', moveHandler);
 
-
 newGame();
-
-// console.log(matrix[0])
-// console.log(matrix[matrix.length-1])
-// console.log(matrix.map(i=>i[0]))
-// console.log(matrix.map(i=>i[i.length-1]))
