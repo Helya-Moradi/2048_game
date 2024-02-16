@@ -4,18 +4,26 @@ const gameContainer = document.querySelector('.gameContainer');
 const gameOverContainer = document.querySelector('.gameOverContainer');
 const newGameButtons = document.querySelectorAll('.newGame');
 
-let matrix = [
-    [0, 0, 0, 0],
-    [0, 2, 0, 0],
-    [0, 4, 0, 0],
-    [0, 0, 0, 0]
-];
+let matrix = JSON.parse(localStorage.getItem('matrix'));
 
-let score = 0;
+let score = parseInt(localStorage.getItem('score'));
+if (!score) {
+    generateScoreElem(0, 0)
+}
+
+if (!matrix) {
+    newGame()
+} else {
+    generateScoreElem(0, score)
+    generateBoard()
+}
+
+console.log(matrix)
 
 function generateBoard() {
     board.innerHTML = '';
 
+    localStorage.setItem('matrix', JSON.stringify(matrix))
     matrix.map((row, i) => {
         row.map((column, j) => {
             const tile = document.createElement('div');
@@ -72,17 +80,10 @@ function addRandomTile() {
     }
 }
 
-function resetMatrix() {
-    matrix = [
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0]
-    ];
-}
-
-function generateScoreElem(val) {
+function generateScoreElem(scr, val) {
+    score = scr;
     score += val;
+    localStorage.setItem('score', score)
     scoreElem.innerHTML = score;
 }
 
@@ -90,17 +91,23 @@ function newGame() {
     gameContainer.classList.remove('hide');
     gameOverContainer.classList.add('hide');
 
-    generateScoreElem(0);
+    matrix = [
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+    ];
     generateBoard();
-    // addRandomTile();
-    // addRandomTile();
+
+    generateScoreElem(0, score);
+    addRandomTile();
+    addRandomTile();
 }
 
 newGameButtons.forEach(newButton => {
 
     newButton.addEventListener('click', () => {
         score = 0;
-        resetMatrix();
         newGame();
 
         gameContainer.classList.remove('hide');
@@ -117,6 +124,7 @@ function gameOverCheck() {
     } else {
         gameContainer.classList.add('hide');
         gameOverContainer.classList.remove('hide');
+        localStorage.clear()
     }
 }
 
@@ -148,11 +156,10 @@ function findDests(value, {row, col}) {
             dests.push({row: r, col, value});
         } else if (matrix[r][col] === value) {
             dests.push({row: r, col, value: value * 2});
-            generateScoreElem(value * 2);
+            generateScoreElem(value * 2, score);
         } else {
             break;
         }
-
     }
 
     return dests;
@@ -234,5 +241,3 @@ function rightMoveHandler() {
 }
 
 window.addEventListener('keydown', moveHandler);
-
-newGame();
