@@ -6,9 +6,9 @@ const newGameButtons = document.querySelectorAll('.newGame');
 
 let matrix = [
     [0, 0, 0, 0],
-    [0, 0, 2, 0],
-    [0, 0, 2, 0],
-    [0, 0, 2, 0]
+    [0, 0, 0, 0],
+    [0, 4, 0, 0],
+    [0, 0, 0, 0]
 ];
 
 let score = 0;
@@ -65,8 +65,8 @@ function addRandomTile() {
 
     if (matrix[randomI][randomJ] === 0) {
         matrix[randomI][randomJ] = createRandom(0, 10) < 9 ? 2 : 4;
-        gameOverCheck()
         generateBoard();
+        gameOverCheck();
     } else {
         addRandomTile();
     }
@@ -114,7 +114,6 @@ function gameOverCheck() {
         gameContainer.classList.remove('hide');
         gameOverContainer.classList.add('hide');
     } else {
-        console.log('over')
         gameContainer.classList.add('hide');
         gameOverContainer.classList.remove('hide');
     }
@@ -143,44 +142,45 @@ function moveHandler(e) {
 function moveTo(direction, value, {row, col}) {
     let dests = [{row, col, value}];
 
-
     if (direction === 'up') {
-        // const previousItemsArray = [];
-        //
-        // for (let i = 0; i < row; i++) {
-        //     previousItemsArray.push({row: i, col: col, value: matrix[i][col]});
-        // }
-
         for (let r = row - 1; r >= 0; r--) {
             if (matrix[r][col] === 0) {
                 dests.push({row: r, col, value})
             } else if (matrix[r][col] === value) {
-                dests.push({row: r, col, value: value *2})
+                dests.push({row: r, col, value: value * 2})
+            } else {
                 break;
             }
         }
     }
     if (direction === 'down') {
-        const previousItemsArray = [];
-
-        for (let i = row + 1; i < matrix[row].length; i++) {
-            previousItemsArray.push({row: i, col: col, value: matrix[i][col]});
-        }
-
-        for (let i = 0; i < previousItemsArray.length; i++) {
-            const item = previousItemsArray[i];
-            if (item.value === 0) {
-                isMoveAllow = true;
-                dest = {row: item.row, col: item.col, value: value}
-            }
-        }
+        // const previousItemsArray = [];
+        //
+        // for (let i = row + 1; i < matrix[row].length; i++) {
+        //     previousItemsArray.push({row: i, col: col, value: matrix[i][col]});
+        // }
+        //
+        // for (let i = 0; i < previousItemsArray.length; i++) {
+        //     const item = previousItemsArray[i];
+        //     if (item.value === 0) {
+        //         isMoveAllow = true;
+        //         dest = {row: item.row, col: item.col, value: value}
+        //     }
+        // }
     }
 
-    return dests
+    return dests;
 }
 
 function moveWithAnimation(dests) {
 
+    for (let i = 0; i < dests.length; i++) {
+        matrix[dests[i].row][dests[i].col] = dests[i].value;
+
+        if (i > 0) {
+            matrix[dests[i - 1].row][dests[i - 1].col] = 0
+        }
+    }
 }
 
 
@@ -191,14 +191,11 @@ function upMoveHandler() {
         for (let j = 0; j < matrix[i].length; j++) {
             if (matrix[i][j] !== 0) {
                 const dests = moveTo('up', matrix[i][j], {row: i, col: j});
-                console.log(i,j,dests)
 
                 if (dests.length > 1) {
-                    // matrix[move.dest.row][move.dest.col] = move.dest.value;
-                    // matrix[i][j] = 0;
-
+                    hasMove = true;
                     // TODO: move with animation and update matrix
-
+                    moveWithAnimation(dests);
                 }
             }
         }
@@ -213,24 +210,24 @@ function upMoveHandler() {
 function downMoveHandler() {
     let hasMove = false;
 
-    for (let i = matrix.length - 1; i >= 0; i--) {
-        for (let j = matrix[i].length - 1; j >= 0; j--) {
-            if (matrix[i][j] !== 0) {
-                const move = moveTo('down', matrix[i][j], {row: i, col: j});
-                hasMove = hasMove || move.isMoveAllow;
-
-                if (move.isMoveAllow) {
-                    matrix[move.dest.row][move.dest.col] = move.dest.value;
-                    matrix[i][j] = 0;
-                }
-            }
-        }
-    }
-
-    if (hasMove) {
-        // addRandomTile();
-        generateBoard();
-    }
+    // for (let i = matrix.length - 1; i >= 0; i--) {
+    //     for (let j = matrix[i].length - 1; j >= 0; j--) {
+    //         if (matrix[i][j] !== 0) {
+    //             const move = moveTo('down', matrix[i][j], {row: i, col: j});
+    //             hasMove = hasMove || move.isMoveAllow;
+    //
+    //             if (move.isMoveAllow) {
+    //                 matrix[move.dest.row][move.dest.col] = move.dest.value;
+    //                 matrix[i][j] = 0;
+    //             }
+    //         }
+    //     }
+    // }
+    //
+    // if (hasMove) {
+    //     // addRandomTile();
+    //     generateBoard();
+    // }
 }
 
 function leftMoveHandler() {
