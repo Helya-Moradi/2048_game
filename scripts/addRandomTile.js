@@ -1,8 +1,8 @@
 function addRandomTile(matrix) {
-    const randomI = Math.floor(Math.random() * matrix?.length);
-    const randomJ = Math.floor(Math.random() * matrix?.length);
+    const randomI = Math.floor(Math.random() * matrix.length);
+    const randomJ = Math.floor(Math.random() * matrix.length);
 
-    const createRandom = (l, h) => Math.floor(Math.random() * (h - l + 1)) + l;
+    const createRandom = (start, end) => Math.floor(Math.random() * (end - start + 1)) + start;
 
     if (matrix[randomI][randomJ] === 0) {
         matrix[randomI][randomJ] = createRandom(0, 10) < 9 ? 2 : 4;
