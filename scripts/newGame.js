@@ -1,6 +1,5 @@
-import generateScoreElem from "./generateScoreElem.js";
 
-function newGame(score, gameContainer, gameOverContainer, winContainer) {
+function newGame(score, gameContainer, gameOverContainer, winContainer,generateScoreElem) {
     gameContainer.classList.remove('hide');
     gameOverContainer.classList.add('hide');
     winContainer.classList.add('hide');
@@ -12,7 +11,7 @@ function newGame(score, gameContainer, gameOverContainer, winContainer) {
         [0, 0, 0, 0]
     ];
 
-    generateScoreElem(score, 0, 0);
+    generateScoreElem( 0, 0);
 
     return resetMatrix;
 }

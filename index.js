@@ -1,29 +1,37 @@
 import rotate from './scripts/rotate.js';
 import generateBoard from "./scripts/generateBoard.js";
 import newGame from "./scripts/newGame.js";
-import generateScoreElem from "./scripts/generateScoreElem.js";
 import addRandomTile from "./scripts/addRandomTile.js";
 
 const gameContainer = document.querySelector('.gameContainer');
 const gameOverContainer = document.querySelector('.gameOverContainer');
 const winContainer = document.querySelector('.winContainer');
 const newGameButtons = document.querySelectorAll('.newGame');
+const scoreElem = document.querySelector('.score');
+
 
 let score = parseInt(localStorage.getItem('score'));
 if (!score) {
-    generateScoreElem(score, 0, 0);
+    generateScoreElem(0, 0);
 }
 
 let matrix = JSON.parse(localStorage.getItem('matrix'));
 if (!matrix) {
-    matrix = newGame(score, gameContainer, gameOverContainer, winContainer);
+    matrix = newGame(score, gameContainer, gameOverContainer, winContainer, generateScoreElem);
     addRandomTile(matrix);
     addRandomTile(matrix);
     generateBoard(matrix, gameContainer, gameOverContainer, winContainer);
 
 } else {
-    generateScoreElem(score, 0, score);
+    generateScoreElem(0, score);
     generateBoard(matrix, gameContainer, gameOverContainer, winContainer);
+}
+
+function generateScoreElem(currentScore, val) {
+    score = currentScore;
+    score += val;
+    localStorage.setItem('score', score);
+    scoreElem.innerHTML = score;
 }
 
 function moveHandler(e) {
@@ -54,7 +62,7 @@ function findDestinations(value, {row, col}) {
             destinations.push({row: r, col, value});
         } else if (matrix[r][col] === value) {
             destinations.push({row: r, col, value: value * 2});
-            generateScoreElem(score, value * 2, score);
+            generateScoreElem(value * 2, score);
         } else {
             break;
         }
@@ -92,13 +100,17 @@ function moveToUp() {
     return hasMove;
 }
 
-function upMoveHandler() {
-    const movable = moveToUp()
-
-    if (movable) {
+function updateBoard(isMove) {
+    if (isMove) {
         addRandomTile(matrix);
         generateBoard(matrix, gameContainer, gameOverContainer, winContainer);
     }
+}
+
+function upMoveHandler() {
+    const movable = moveToUp()
+
+    updateBoard(movable);
 }
 
 function downMoveHandler() {
@@ -106,10 +118,7 @@ function downMoveHandler() {
     const movable = moveToUp();
     matrix = rotate(matrix, 2);
 
-    if (movable) {
-        addRandomTile(matrix);
-        generateBoard(matrix, gameContainer, gameOverContainer, winContainer);
-    }
+    updateBoard(movable);
 }
 
 function leftMoveHandler() {
@@ -117,10 +126,7 @@ function leftMoveHandler() {
     const movable = moveToUp()
     matrix = rotate(matrix, 3);
 
-    if (movable) {
-        addRandomTile(matrix);
-        generateBoard(matrix, gameContainer, gameOverContainer, winContainer);
-    }
+    updateBoard(movable);
 }
 
 function rightMoveHandler() {
@@ -128,23 +134,16 @@ function rightMoveHandler() {
     const movable = moveToUp()
     matrix = rotate(matrix, 1);
 
-    if (movable) {
-        addRandomTile(matrix);
-        generateBoard(matrix, gameContainer, gameOverContainer, winContainer);
-    }
+    updateBoard(movable);
 }
 
 window.addEventListener('keydown', moveHandler);
 
 newGameButtons.forEach(newButton => {
     newButton.addEventListener('click', () => {
-        matrix = newGame(score, gameContainer, gameOverContainer, winContainer);
+        matrix = newGame(score, gameContainer, gameOverContainer, winContainer, generateScoreElem);
         addRandomTile(matrix);
         addRandomTile(matrix);
         generateBoard(matrix, gameContainer, gameOverContainer, winContainer);
-
-        gameContainer.classList.remove('hide');
-        gameOverContainer.classList.add('hide');
-        winContainer.classList.add('hide');
     })
 });
