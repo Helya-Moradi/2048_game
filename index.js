@@ -2,23 +2,22 @@ const board = document.querySelector('.gameBoard');
 const scoreElem = document.querySelector('.score');
 const gameContainer = document.querySelector('.gameContainer');
 const gameOverContainer = document.querySelector('.gameOverContainer');
+const winContainer = document.querySelector('.winContainer');
 const newGameButtons = document.querySelectorAll('.newGame');
 
 let matrix = JSON.parse(localStorage.getItem('matrix'));
 
 let score = parseInt(localStorage.getItem('score'));
 if (!score) {
-    generateScoreElem(0, 0)
+    generateScoreElem(0, 0);
 }
 
 if (!matrix) {
-    newGame()
+    newGame();
 } else {
-    generateScoreElem(0, score)
-    generateBoard()
+    generateScoreElem(0, score);
+    generateBoard();
 }
-
-console.log(matrix)
 
 function generateBoard() {
     board.innerHTML = '';
@@ -37,11 +36,12 @@ function generateBoard() {
                         return timeFraction;
                     },
                     draw(progress) {
-                        tile.style.transform = `scale(${progress})`
+                        tile.style.transform = `scale(${progress})`;
                     }
                 });
             }
 
+            gameCheck();
             tile.setAttribute('data-position', `${i}-${j}`)
             board.appendChild(tile);
         })
@@ -55,7 +55,7 @@ function animate(options) {
         let timeFraction = (time - start) / options.duration;
         if (timeFraction > 1) timeFraction = 1;
 
-        let progress = options.timing(timeFraction)
+        let progress = options.timing(timeFraction);
 
         options.draw(progress);
 
@@ -74,7 +74,6 @@ function addRandomTile() {
     if (matrix[randomI][randomJ] === 0) {
         matrix[randomI][randomJ] = createRandom(0, 10) < 9 ? 2 : 4;
         generateBoard();
-        gameOverCheck();
     } else {
         addRandomTile();
     }
@@ -83,7 +82,7 @@ function addRandomTile() {
 function generateScoreElem(scr, val) {
     score = scr;
     score += val;
-    localStorage.setItem('score', score)
+    localStorage.setItem('score', score);
     scoreElem.innerHTML = score;
 }
 
@@ -112,19 +111,32 @@ newGameButtons.forEach(newButton => {
 
         gameContainer.classList.remove('hide');
         gameOverContainer.classList.add('hide');
+        winContainer.classList.add('hide');
     })
 })
 
-function gameOverCheck() {
+function gameCheck() {
     const isContinue = matrix.some(i => i.some(j => j === 0));
+    const isWin = matrix.some(i => i.some(j => j === 2048));
 
-    if (isContinue) {
+    if (isContinue && !isWin) {
+
         gameContainer.classList.remove('hide');
         gameOverContainer.classList.add('hide');
-    } else {
+        winContainer.classList.add('hide');
+
+    } else if (isContinue && isWin) {
+
         gameContainer.classList.add('hide');
+        winContainer.classList.remove('hide');
+        localStorage.clear();
+
+    } else {
+
+        gameContainer.classList.add('hide');
+        winContainer.classList.add('hide');
         gameOverContainer.classList.remove('hide');
-        localStorage.clear()
+        localStorage.clear();
     }
 }
 
@@ -201,7 +213,6 @@ const rightRotate = () => {
 const leftRotate = () => {
     matrix = matrix[0].map((val, index) => matrix.map(row => row[row.length - 1 - index]));
 }
-
 
 function upMoveHandler() {
     const movable = moveToUp()

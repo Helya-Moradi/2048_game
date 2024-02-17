@@ -50,7 +50,8 @@ header {
 }
 
 .details > *,
-.gameOverContainer .newGame {
+.gameOverContainer .newGame,
+.winContainer .newGame{
     color: #ffffff;
     padding: .7rem 1.7rem;
     font-size: 1.1rem;
@@ -73,7 +74,8 @@ header {
 }
 
 .details .newGame,
-.gameOverContainer .newGame {
+.gameOverContainer .newGame,
+.winContainer .newGame{
     background-color: #867368;
     border: none;
     outline: none;
@@ -82,7 +84,8 @@ header {
 }
 
 .details .newGame:hover,
-.gameOverContainer .newGame:hover {
+.gameOverContainer .newGame:hover,
+.winContainer .newGame:hover{
     filter: brightness(90%);
 }
 
@@ -157,7 +160,8 @@ header {
     background-color: #ecc230;
 }
 
-.gameOverContainer {
+.gameOverContainer,
+.winContainer{
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -166,7 +170,8 @@ header {
     gap: .5rem;
 }
 
-.gameOverContainer .gameOver {
+.gameOverContainer .gameOver,
+.winContainer .win{
     font-size: 3.5rem;
     font-weight: 600;
     color: var(--title-color);
