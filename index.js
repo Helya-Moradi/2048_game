@@ -19,7 +19,7 @@ let matrix = JSON.parse(localStorage.getItem('matrix'));
 if (!matrix) {
     generateBoard();
 
-    matrix = newGame(score, gameContainer, gameOverContainer, winContainer, generateScoreElem);
+    matrix = newGame( gameContainer, gameOverContainer, winContainer, generateScoreElem);
 
     addRandomTile(matrix,2);
     generateTiles(matrix, gameContainer, gameOverContainer, winContainer);
@@ -145,7 +145,7 @@ window.addEventListener('keydown', moveHandler);
 
 newGameButtons.forEach(newButton => {
     newButton.addEventListener('click', () => {
-        matrix = newGame(score, gameContainer, gameOverContainer, winContainer, generateScoreElem);
+        matrix = newGame(gameContainer, gameOverContainer, winContainer, generateScoreElem);
         addRandomTile(matrix,2);
         generateTiles(matrix, gameContainer, gameOverContainer, winContainer);
     })

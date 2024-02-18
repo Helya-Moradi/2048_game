@@ -1,5 +1,4 @@
-
-function newGame(score, gameContainer, gameOverContainer, winContainer,generateScoreElem) {
+function newGame(gameContainer, gameOverContainer, winContainer, generateScoreElem) {
     gameContainer.classList.remove('hide');
     gameOverContainer.classList.add('hide');
     winContainer.classList.add('hide');
@@ -11,7 +10,7 @@ function newGame(score, gameContainer, gameOverContainer, winContainer,generateS
         [0, 0, 0, 0]
     ];
 
-    generateScoreElem( 0, 0);
+    generateScoreElem(0, 0);
 
     return resetMatrix;
 }
