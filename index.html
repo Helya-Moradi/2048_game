@@ -13,32 +13,9 @@
     <title>2048 Game</title>
 </head>
 <body>
-    <div class="gameContainer">
-        <header>
-            <div class="title">
-                <h1>2048</h1>
-                <span>Join the numbers and get to the 2048 tile!</span>
-            </div>
-
-            <div class="details">
-                <span class="scoreWrapper">Score : <span class="score"></span></span>
-                <button class="newGame">New Game</button>
-            </div>
-        </header>
-
-        <div class="gameBoard">
-        </div>
-
-    </div>
-
-    <div class="gameOverContainer hide">
-        <span class="gameOver">Game Over!</span>
-        <button class="newGame">Try again</button>
-    </div>
-
-    <div class="winContainer hide">
-        <span class="win">You have won!</span>
-        <button class="newGame">New Game</button>
+    <div class="board">
+        <div class="slots"></div>
+        <div class="tiles"></div>
     </div>
 
     <script type="module" src="index.js"></script>

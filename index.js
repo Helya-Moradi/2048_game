@@ -1,152 +1,186 @@
-import rotate from './scripts/rotate.js';
-import generateBoard from "./scripts/generateBoard.js";
-import newGame from "./scripts/newGame.js";
-import addRandomTile from "./scripts/addRandomTile.js";
-import generateTiles from "./scripts/generateTiles.js";
+const board = document.querySelector('.board')
+const slotsContainer = document.querySelector('.board .slots')
+const tilesContainer = document.querySelector('.board .tiles')
 
-const gameContainer = document.querySelector('.gameContainer');
-const gameOverContainer = document.querySelector('.gameOverContainer');
-const winContainer = document.querySelector('.winContainer');
-const newGameButtons = document.querySelectorAll('.newGame');
-const scoreElem = document.querySelector('.score');
+const slots = [];
 
-let score = parseInt(localStorage.getItem('score'));
-if (!score) {
-    generateScoreElem(0, 0);
-}
+let matrix = [];
 
-let matrix = JSON.parse(localStorage.getItem('matrix'));
-if (!matrix) {
-    generateBoard();
+function generateBoard() {
+    for (let i = 0; i < 4; i++) {
+        const row = [];
+        const matrixRow = [];
 
-    matrix = newGame( gameContainer, gameOverContainer, winContainer, generateScoreElem);
+        for (let j = 0; j < 4; j++) {
+            const slot = document.createElement('div');
+            slot.classList.add('slot');
 
-    addRandomTile(matrix,2);
-    generateTiles(matrix, gameContainer, gameOverContainer, winContainer);
+            slotsContainer.appendChild(slot);
 
-} else {
-    generateBoard();
-
-    generateScoreElem(score, 0);
-    generateTiles(matrix, gameContainer, gameOverContainer, winContainer);
-}
-
-function generateScoreElem(currentScore, val) {
-    score = currentScore;
-    score += val;
-    localStorage.setItem('score', score);
-    scoreElem.innerHTML = score;
-}
-
-function moveHandler(e) {
-    switch (e.code) {
-        case 'ArrowUp':
-            upMoveHandler();
-            break;
-
-        case 'ArrowDown':
-            downMoveHandler();
-            break;
-
-        case 'ArrowLeft':
-            leftMoveHandler();
-            break;
-
-        case 'ArrowRight':
-            rightMoveHandler();
-            break;
-    }
-}
-
-function findDestinations(value, {row, col}) {
-    let destinations = [{row, col, value}];
-
-    for (let r = row - 1; r >= 0; r--) {
-        if (matrix[r][col] === 0) {
-            destinations.push({row: r, col, value});
-        } else if (matrix[r][col] === value) {
-            destinations.push({row: r, col, value: value * 2});
-            generateScoreElem(score, value * 2);
-        } else {
-            break;
+            row.push(slot);
+            matrixRow.push({
+                value: null,
+                tile: null
+            });
         }
+        matrix.push(matrixRow);
+        slots.push(row);
     }
-
-    return destinations;
 }
 
-function moveWithAnimation(destinations) {
-    for (let i = 0; i < destinations.length; i++) {
-        matrix[destinations[i].row][destinations[i].col] = destinations[i].value;
+function calculateTileBounds(i, j) {
+    const slotsContainerBounds = slotsContainer.getBoundingClientRect();
+    const slotBounds = slots[i][j].getBoundingClientRect();
 
-        if (i > 0) {
-            matrix[destinations[i - 1].row][destinations[i - 1].col] = 0
+    return {
+        left: slotBounds.left - slotsContainerBounds.left,
+        top: slotBounds.top - slotsContainerBounds.top,
+        width: slotBounds.width,
+        height: slotBounds.height
+    }
+}
+
+function generateTile(i, j, value) {
+    const tile = document.createElement('div');
+    tile.classList.add('tile');
+    tile.textContent = value.toString();
+
+    const tileBounds = calculateTileBounds(i, j);
+
+    tile.style.left = `${tileBounds.left}px`;
+    tile.style.top = `${tileBounds.top}px`;
+    tile.style.width = `${tileBounds.width}px`;
+    tile.style.height = `${tileBounds.height}px`;
+
+    return tile;
+}
+
+function generateRandomTile() {
+    const emptyCells = matrix.map((row, i) => row.map((cell, j) => ({
+        ...cell,
+        i,
+        j
+    })).filter(cell => cell.value === null)).flat(2)
+    const {i, j} = emptyCells[Math.floor(Math.random() * emptyCells.length)]
+
+    const value = Math.random() < .75 ? 2 : 4;
+
+    const tile = generateTile(i, j, value);
+    tilesContainer.appendChild(tile);
+
+    matrix[i][j].value = value;
+    matrix[i][j].tile = tile;
+
+    tile.animate(
+        [
+            {transform: 'scale(0)'},
+            {transform: 'scale(1)'},
+        ],
+        {
+            duration: 200,
+            easing: 'ease-in-out'
         }
+    )
+}
+
+function keyHandler(e) {
+    if(e.code.startsWith('Arrow')){
+        const direction = e.code.substring(5).toLowerCase();
+        moveHandler(direction);
     }
 }
 
-function moveToUp() {
-    let hasMove = false;
+function moveHandler(direction) {
+    const rotations = {
+        up: 3,
+        down: 1,
+        left: 0,
+        right: 2
+    }[direction];
 
-    for (let i = 0; i < matrix.length; i++) {
-        for (let j = 0; j < matrix[i].length; j++) {
-            if (matrix[i][j] !== 0) {
-                const destinations = findDestinations(matrix[i][j], {row: i, col: j});
+    let newMatrix = rotate(matrix, rotations);
+    newMatrix = moveTiles(newMatrix);
+    newMatrix = rotate(newMatrix, (4 - rotations) % 4);
 
-                if (destinations.length > 1) {
-                    hasMove = true;
-                    moveWithAnimation(destinations);
-                }
+    for (let i = 0; i < newMatrix.length; i++) {
+        for (let j = 0; j < newMatrix[i].length; j++) {
+            if(newMatrix[i][j].value){
+                const tileBounds = calculateTileBounds(i, j);
+
+
+
+                newMatrix[i][j].tile.animate(
+                    [
+                        {
+                            left : `${tileBounds.left}px`,
+                            top : `${tileBounds.top}px`
+                        },
+                    ],
+                    {
+                        duration: 200,
+                        fill: "forwards",
+                        easing: 'ease-in-out'
+                    }
+                )
             }
         }
     }
-
-    return hasMove;
 }
 
-function updateBoard(isMove) {
-    if (isMove) {
-        addRandomTile(matrix,1);
-        generateTiles(matrix, gameContainer, gameOverContainer, winContainer);
+function rotate(matrix, rotations) {
+    let newMatrix = matrix.map(row => [...row]);
+
+    for (let i = 0; i < rotations; i++) {
+        newMatrix = newMatrix[0].map((value, index) => newMatrix.map(row => row[index]).reverse());
     }
+
+    return newMatrix;
 }
 
-function upMoveHandler() {
-    const movable = moveToUp()
+function moveTiles(matrix) {
+    let newMatrix = [];
 
-    updateBoard(movable);
+    for (let i = 0; i < matrix.length; i++) {
+        let nonEmptyCells = matrix[i].filter(cell => cell.value !== null);
+        let row = [];
+
+        for (let j = 0; j < nonEmptyCells.length; j++) {
+            const currentCell = nonEmptyCells[j];
+
+            console.log(currentCell)
+
+            if (j < nonEmptyCells.length - 1) {
+                const nextCell = nonEmptyCells[j + 1];
+
+                if (nextCell.value === currentCell.value) {
+                    currentCell.value *= 2;
+                    currentCell.tile.textContent = currentCell.value.toString();
+                    nextCell.tile.remove();
+
+                    j += 1;
+                }
+            }
+
+            row.push(currentCell);
+        }
+
+        const emptyCount = 4 - row.length;
+        for (let k = 0; k < emptyCount; k++) {
+            row.push({
+                value: null,
+                tile: null
+            });
+        }
+
+        newMatrix.push(row);
+    }
+
+    return newMatrix;
 }
 
-function downMoveHandler() {
-    matrix = rotate(matrix, 2);
-    const movable = moveToUp();
-    matrix = rotate(matrix, 2);
+generateBoard();
 
-    updateBoard(movable);
-}
+generateRandomTile();
+generateRandomTile();
 
-function leftMoveHandler() {
-    matrix = rotate(matrix, 1);
-    const movable = moveToUp()
-    matrix = rotate(matrix, 3);
-
-    updateBoard(movable);
-}
-
-function rightMoveHandler() {
-    matrix = rotate(matrix, 3);
-    const movable = moveToUp()
-    matrix = rotate(matrix, 1);
-
-    updateBoard(movable);
-}
-
-window.addEventListener('keydown', moveHandler);
-
-newGameButtons.forEach(newButton => {
-    newButton.addEventListener('click', () => {
-        matrix = newGame(gameContainer, gameOverContainer, winContainer, generateScoreElem);
-        addRandomTile(matrix,2);
-        generateTiles(matrix, gameContainer, gameOverContainer, winContainer);
-    })
-});
+window.addEventListener('keydown', keyHandler);

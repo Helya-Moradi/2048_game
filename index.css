@@ -1,187 +1,62 @@
-:root {
-    --title-color: #6d6159;
-}
-
-* {
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-    padding: 0;
-    margin: 0;
-}
+/*#6d6159*/
+/*#eee4da*/
+/*#eee1c9*/
+/*#f3b27a*/
+/*#f69664*/
+/*#f77c5f*/
+/*#f75f3b*/
+/*#edd073*/
+/*#edcc63*/
+/*#edc651*/
+/*#eec744*/
+/*#ecc230*/
 
 body {
+    margin: 0;
     background-color: #ece6dc;
-}
-
-.gameContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    max-width: 40rem;
-    margin: auto;
-    padding: 2rem;
-    gap: 2.5rem;
-}
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.title {
-    display: flex;
-    flex-direction: column;
-    color: var(--title-color);
-}
-
-.title h1 {
-    font-size: 4rem;
-}
-
-.title span {
-    font-size: 1.1rem;
-}
-
-.details {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.details > *,
-.gameOverContainer .newGame,
-.winContainer .newGame{
-    color: #ffffff;
-    padding: .7rem 1.7rem;
-    font-size: 1.1rem;
-    border-radius: .4rem;
-}
-
-.details .scoreWrapper {
-    color: #ede2dc;
-    background-color: #ae9f92;
-    display: flex;
-    align-items: center;
-    gap: .3rem;
-    flex-wrap: wrap;
-}
-
-.details .score {
-    color: #ffffff;
-    font-weight: 600;
-    font-size: 1.2rem;
-}
-
-.details .newGame,
-.gameOverContainer .newGame,
-.winContainer .newGame{
-    background-color: #867368;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    transition: .1s;
-}
-
-.details .newGame:hover,
-.gameOverContainer .newGame:hover,
-.winContainer .newGame:hover{
-    filter: brightness(90%);
-}
-
-.gameBoard {
-    max-width: 100%;
-    width: 36rem;
-    height: 36rem;
-    background-color: #ae9f92;
-    border-radius: .51rem;
-    padding: 1rem;
-    display: grid;
-    grid-template-rows: repeat(4, 1fr);
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-}
-
-.gameBoard .tileContainer {
-    background-color: #c3b6ab;
-    border-radius: .4rem;
-}
-
-.gameBoard .tileContainer .tile{
-    width: 100%;
-    height: 100%;
-    border-radius: .4rem;
+    font-family: 'Poppins', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100vh;
+}
+
+.board{
+    width: 70vh;
+    height: 70vh;
+    background-color: #bbada0;
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+}
+
+.board .slots{
+    grid-area: 1/1;
+    display: grid;
+    grid-template-rows: repeat(4,1fr);
+    grid-template-columns: repeat(4,1fr);
+    gap: 15px;
+    padding: 15px;
+}
+
+.board .slots .slot{
+    background-color: #eee4da59;
+    border-radius: 6px;
+}
+
+.board .tiles{
+    grid-area: 1/1;
+    position: relative;
+}
+
+.board .tiles .tile{
+    position: absolute;
+    display: grid;
+    place-items: center;
+    border-radius: 6px;
+    background-color: #eee4da;
+    color: #776e65;
     font-size: 3rem;
     font-weight: 600;
-    color: #fff;
-}
-
-.gameBoard .tileContainer .tile.tile2 {
-    background-color: #eee4da;
-    color: #90867c;
-}
-
-.gameBoard .tileContainer .tile.tile4 {
-    background-color: #eee1c9;
-    color: #7f7060;
-}
-
-.gameBoard .tileContainer .tile.tile8 {
-    background-color: #f3b27a;
-}
-
-.gameBoard .tileContainer .tile.tile16 {
-    background-color: #f69664;
-}
-
-.gameBoard .tileContainer .tile.tile32 {
-    background-color: #f77c5f;
-}
-
-.gameBoard .tileContainer .tile.tile64 {
-    background-color: #f75f3b;
-}
-
-.gameBoard .tileContainer .tile.tile128 {
-    background-color: #edd073;
-}
-
-.gameBoard .tileContainer .tile.tile256 {
-    background-color: #edcc63;
-}
-
-.gameBoard .tileContainer .tile.tile512 {
-    background-color: #edc651;
-}
-
-.gameBoard .tileContainer .tile.tile1024 {
-    background-color: #eec744;
-}
-
-.gameBoard .tileContainer .tile.tile2048 {
-    background-color: #ecc230;
-}
-
-.gameOverContainer,
-.winContainer{
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: .5rem;
-}
-
-.gameOverContainer .gameOver,
-.winContainer .win{
-    font-size: 3.5rem;
-    font-weight: 600;
-    color: var(--title-color);
-}
-
-.hide {
-    display: none;
 }
