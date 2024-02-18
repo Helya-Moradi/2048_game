@@ -102,61 +102,66 @@ header {
     gap: 1rem;
 }
 
-.gameBoard .tile {
-    position: relative;
+.gameBoard .tileContainer {
     background-color: #c3b6ab;
     border-radius: .4rem;
-    font-size: 3rem;
-    font-weight: 600;
-    color: #fff;
+}
+
+.gameBoard .tileContainer .tile{
+    width: 100%;
+    height: 100%;
+    border-radius: .4rem;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 3rem;
+    font-weight: 600;
+    color: #fff;
 }
 
-.gameBoard .tile.tile2 {
+.gameBoard .tileContainer .tile.tile2 {
     background-color: #eee4da;
     color: #90867c;
 }
 
-.gameBoard .tile.tile4 {
+.gameBoard .tileContainer .tile.tile4 {
     background-color: #eee1c9;
     color: #7f7060;
 }
 
-.gameBoard .tile.tile8 {
+.gameBoard .tileContainer .tile.tile8 {
     background-color: #f3b27a;
 }
 
-.gameBoard .tile.tile16 {
+.gameBoard .tileContainer .tile.tile16 {
     background-color: #f69664;
 }
 
-.gameBoard .tile.tile32 {
+.gameBoard .tileContainer .tile.tile32 {
     background-color: #f77c5f;
 }
 
-.gameBoard .tile.tile64 {
+.gameBoard .tileContainer .tile.tile64 {
     background-color: #f75f3b;
 }
 
-.gameBoard .tile.tile128 {
+.gameBoard .tileContainer .tile.tile128 {
     background-color: #edd073;
 }
 
-.gameBoard .tile.tile256 {
+.gameBoard .tileContainer .tile.tile256 {
     background-color: #edcc63;
 }
 
-.gameBoard .tile.tile512 {
+.gameBoard .tileContainer .tile.tile512 {
     background-color: #edc651;
 }
 
-.gameBoard .tile.tile1024 {
+.gameBoard .tileContainer .tile.tile1024 {
     background-color: #eec744;
 }
 
-.gameBoard .tile.tile2048 {
+.gameBoard .tileContainer .tile.tile2048 {
     background-color: #ecc230;
 }
 
