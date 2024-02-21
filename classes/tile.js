@@ -1,65 +1,79 @@
-import Bounds from "./bounds.js";
 import getBackgroundColors from '../utils/getBackgrounds.js'
 
 class Tile {
-    matrix;
-    slots;
-    slotsContainer;
+    value;
+    element;
 
-    constructor(matrix, slots, slotsContainer) {
-        this.matrix = matrix;
-        this.slots = slots;
-        this.slotsContainer = slotsContainer;
+    constructor(value, bounds) {
+        this.value = value;
 
-        this.tilesContainer = document.querySelector('.board .tiles')
-    }
-
-    generateRandomTile() {
-        const emptyCells = this.matrix.map((row, i) => row.map((cell, j) => ({
-            ...cell,
-            i,
-            j
-        })).filter(cell => cell.value === null)).flat(2);
-
-        const {i, j} = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-        const value = Math.random() < .75 ? 2 : 4;
-
-        const tile = this.generateTile(i, j, value);
-
-        this.tilesContainer.appendChild(tile);
-
-        this.matrix[i][j].value = value;
-        this.matrix[i][j].tile = tile;
-
-        this.addAnimation(tile);
-    }
-
-    generateTile(i, j, value) {
         const tile = document.createElement('div');
         tile.classList.add('tile');
         tile.textContent = value.toString();
 
-        const bounds = new Bounds(i, j, this.slotsContainer, this.slots);
-        const tileBounds = bounds.calculateTileBounds();
-
-        tile.style.left = `${tileBounds.left}px`;
-        tile.style.top = `${tileBounds.top}px`;
-        tile.style.width = `${tileBounds.width}px`;
-        tile.style.height = `${tileBounds.height}px`;
+        tile.style.left = `${bounds.left}px`;
+        tile.style.top = `${bounds.top}px`;
+        tile.style.width = `${bounds.width}px`;
+        tile.style.height = `${bounds.height}px`;
 
         tile.style.backgroundColor = getBackgroundColors(value);
 
-        return tile;
+        this.element = tile;
+
+        this.addAnimate();
     }
 
-    addAnimation(tile) {
-        tile.animate(
+    move(bounds) {
+        this.element.animate(
+            [
+                {
+                    left: `${bounds.left}px`,
+                    top: `${bounds.top}px`
+                },
+            ],
+            {
+                duration: 200,
+                fill: "forwards",
+                easing: 'ease-in-out'
+            }
+        )
+    }
+
+    upgrade() {
+        this.value *= 2;
+        this.element.textContent = this.value.toString();
+
+        this.mergeAnimate();
+    }
+
+    addAnimate() {
+        this.element.animate(
             [
                 {transform: 'scale(0)'},
                 {transform: 'scale(1)'},
             ],
             {
                 duration: 200,
+                easing: 'ease-in-out'
+            }
+        )
+    }
+
+    mergeAnimate() {
+        this.element.animate(
+            [
+                {
+                    transform: 'scale(1.1)',
+                },
+                {
+                    transform: 'scale(1)',
+                    backgroundColor: getBackgroundColors(this.value),
+                    color: this.value <= 4 ? '#776e65' : '#fff'
+                }
+            ],
+            {
+                duration: 200,
+                fill: "forwards",
                 easing: 'ease-in-out'
             }
         )
