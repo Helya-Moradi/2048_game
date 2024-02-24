@@ -2,12 +2,14 @@ import Tile from "./tile.js";
 
 class Board {
     size = 4;
+    score = 0;
 
     matrix = [];
     slots = [];
 
     slotsContainer;
     tilesContainer;
+    scoreContainer;
 
     constructor(size = 4) {
         this.size = size;
@@ -17,6 +19,9 @@ class Board {
 
         this.slotsContainer.style.gridTemplateRows = `repeat(${size}, 1fr)`;
         this.slotsContainer.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+
+        this.scoreContainer = document.querySelector('.score .value');
+        this.scoreContainer.textContent = this.score.toString();
 
         this.generateBoard();
 
@@ -48,7 +53,10 @@ class Board {
                     const nextTile = rowTiles[j + 1];
 
                     if (nextTile.value === currentTile.value) {
-                        currentTile.upgrade();
+                        const score = currentTile.upgrade();
+                        this.score += score;
+                        this.scoreContainer.textContent = this.score.toString();
+
                         nextTile.element.remove();
 
                         j += 1;

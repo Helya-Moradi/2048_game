@@ -3,12 +3,56 @@ body {
     background-color: #ece6dc;
     font-family: 'Poppins', sans-serif;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
 
+header{
+    display: flex;
+    align-items: start;
+    min-width: 45vw;
+}
+
+header .title{
+    color: #867b72;
+    font-weight: bold;
+}
+
+header .title h1{
+    font-size: 3rem;
+}
+
+header .title span{
+    font-size: 1.2rem;
+}
+
+header .info{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-left: auto;
+}
+
+header .info > * {
+    background-color: #a08f7c;
+    color: #fff;
+    padding: .5rem 1.2rem;
+    font-weight: bold;
+    font-size: 1rem;
+    border: none;
+    border-radius: .5rem;
+    text-align: center;
+}
+
+header .info .newGameButton:hover{
+    cursor: pointer;
+    filter: brightness(90%);
+}
+
 .board{
+    margin-top: 2rem;
     width: 70vh;
     height: 70vh;
     background-color: #bbada0;

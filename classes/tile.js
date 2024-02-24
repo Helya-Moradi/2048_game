@@ -44,6 +44,8 @@ class Tile {
         this.element.textContent = this.value.toString();
 
         this.mergeAnimate();
+
+        return this.value;
     }
 
     addAnimate() {
