@@ -46,11 +46,6 @@ header .info > * {
     text-align: center;
 }
 
-header .info .newGameButton:hover{
-    cursor: pointer;
-    filter: brightness(90%);
-}
-
 .board{
     margin-top: 2rem;
     width: 70vh;
@@ -90,4 +85,41 @@ header .info .newGameButton:hover{
     color: #776e65;
     font-size: 3rem;
     font-weight: 600;
+}
+
+.newGameButton{
+    color: #ffffff;
+    padding: .7rem 1.7rem;
+    font-size: 1.1rem;
+    border-radius: .4rem;
+    background-color: #867b72;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: .1s;
+}
+
+.newGameButton:hover{
+    filter: brightness(90%);
+}
+
+.gameOverContainer,
+.winContainer{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+}
+
+.gameOverContainer .gameOver,
+.winContainer .win{
+    font-size: 3.5rem;
+    font-weight: 600;
+    color: #776e65;
+}
+
+.hide{
+    display: none;
 }

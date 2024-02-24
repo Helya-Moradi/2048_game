@@ -1,5 +1,6 @@
 import Board from "./classes/board.js";
 
+const newGameButtons = document.querySelectorAll('.newGameButton');
 const board = new Board();
 
 function keyDownHandler(e) {
@@ -10,4 +11,10 @@ function keyDownHandler(e) {
     }
 }
 
-window.addEventListener('keydown', keyDownHandler)
+window.addEventListener('keydown', keyDownHandler);
+
+newGameButtons.forEach(newButton => {
+    newButton.addEventListener('click', () => {
+        board.resetGame();
+    })
+})

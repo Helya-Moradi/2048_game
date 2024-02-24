@@ -9,7 +9,11 @@ class Board {
 
     slotsContainer;
     tilesContainer;
+
     scoreContainer;
+    gameContainer;
+    gameOverContainer;
+    winContainer;
 
     constructor(size = 4) {
         this.size = size;
@@ -22,6 +26,10 @@ class Board {
 
         this.scoreContainer = document.querySelector('.score .value');
         this.scoreContainer.textContent = this.score.toString();
+
+        this.gameContainer = document.querySelector('.gameContainer');
+        this.gameOverContainer = document.querySelector('.gameOverContainer');
+        this.winContainer = document.querySelector('.winContainer');
 
         this.generateBoard();
 
@@ -54,6 +62,7 @@ class Board {
 
                     if (nextTile.value === currentTile.value) {
                         const score = currentTile.upgrade();
+
                         this.score += score;
                         this.scoreContainer.textContent = this.score.toString();
 
@@ -111,7 +120,8 @@ class Board {
         newMatrix = this.shiftTilesToLeft(newMatrix);
         newMatrix = this.rotateMatrix(newMatrix, (this.size - rotations) % this.size);
 
-        this.updateMatrix(newMatrix)
+        this.updateMatrix(newMatrix);
+        this.checkState();
     }
 
     generateBoard() {
@@ -160,6 +170,7 @@ class Board {
 
     generateRandomTile() {
         const emptyCell = this.findEmptyCell();
+
         if (emptyCell) {
             const tileBounds = this.calculateTileBounds(emptyCell.i, emptyCell.j);
 
@@ -169,14 +180,38 @@ class Board {
             this.tilesContainer.appendChild(tile.element);
 
             this.matrix[emptyCell.i][emptyCell.j] = tile;
-        } else {
-            this.checkLose();
         }
     }
 
-    checkLose() {
-        // TODO: CHECK FOR LOSE
-        // TODO: FIRE LOSE EVENT
+    resetGame() {
+        this.tilesContainer.textContent = '';
+
+        this.generateRandomTile();
+        this.generateRandomTile();
+
+        this.gameContainer.classList.remove('hide');
+        this.gameOverContainer.classList.add('hide');
+        this.winContainer.classList.add('hide');
+    }
+
+    checkState() {
+        const isWin = this.matrix.some(row => row.some(cell => cell?.value === 2048));
+        const isContinue = this.matrix.some(row => row.some(cell => cell === null));
+
+        if (isContinue && !isWin) {
+            this.gameContainer.classList.remove('hide');
+            this.gameOverContainer.classList.add('hide');
+            this.winContainer.classList.add('hide');
+
+        } else if (isContinue && isWin) {
+            this.gameContainer.classList.add('hide');
+            this.winContainer.classList.remove('hide');
+
+        } else {
+            this.gameContainer.classList.add('hide');
+            this.winContainer.classList.add('hide');
+            this.gameOverContainer.classList.remove('hide');
+        }
     }
 }
 
